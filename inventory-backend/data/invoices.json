@@ -1,0 +1,50 @@
+{
+  "1751851772620": [
+    {
+      "id": "1751853666879",
+      "invoiceNumber": "INV-1751853666879",
+      "client": {
+        "id": "1751853024578",
+        "name": "456456",
+        "phone": "345643565",
+        "email": "634564",
+        "address": "464356"
+      },
+      "items": [
+        {
+          "productId": "1751852285725",
+          "productName": "pruebasdfgsdfgds",
+          "quantity": 2,
+          "unitPrice": 45645,
+          "total": 91290
+        }
+      ],
+      "subtotal": 91290,
+      "total": 91290,
+      "createdAt": "2025-07-07T02:01:06.879Z"
+    },
+    {
+      "id": "1751854146695",
+      "invoiceNumber": "INV-1751854146694",
+      "client": {
+        "id": "1751853024578",
+        "name": "456456",
+        "phone": "345643565",
+        "email": "634564",
+        "address": "464356"
+      },
+      "items": [
+        {
+          "productId": "1751852056269",
+          "productName": "davidasdasd",
+          "quantity": 1,
+          "unitPrice": 1,
+          "total": 1
+        }
+      ],
+      "subtotal": 1,
+      "total": 1,
+      "createdAt": "2025-07-07T02:09:06.695Z"
+    }
+  ]
+}
