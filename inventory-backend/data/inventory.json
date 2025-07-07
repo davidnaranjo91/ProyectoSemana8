@@ -1,13 +1,6 @@
 {
   "1751849552224": [
     {
-      "id": "1751849586703",
-      "name": "asdasd",
-      "quantity": 3,
-      "price": 99,
-      "createdAt": "2025-07-07T00:53:06.703Z"
-    },
-    {
       "id": "1751849591301",
       "name": "asdasd",
       "quantity": 3,
@@ -62,22 +55,32 @@
       "quantity": 657,
       "price": 5467546,
       "createdAt": "2025-07-07T01:29:14.622Z"
+    },
+    {
+      "id": "1751852741528",
+      "name": "puerta",
+      "quantity": 5,
+      "price": 242342,
+      "createdAt": "2025-07-07T01:45:41.528Z",
+      "updatedAt": "2025-07-07T01:46:34.876Z"
     }
   ],
   "1751851772620": [
     {
-      "id": "1751851790078",
-      "name": "4564yre",
-      "quantity": 34534,
-      "price": 35345,
-      "createdAt": "2025-07-07T01:29:50.078Z"
+      "id": "1751852056269",
+      "name": "davidasdasd",
+      "quantity": 1,
+      "price": 1,
+      "createdAt": "2025-07-07T01:34:16.269Z",
+      "updatedAt": "2025-07-07T01:41:39.469Z"
     },
     {
-      "id": "1751851799916",
-      "name": "6545",
-      "quantity": 456456,
-      "price": 56754675,
-      "createdAt": "2025-07-07T01:29:59.916Z"
+      "id": "1751852285725",
+      "name": "pruebasdfgsdfgds",
+      "quantity": 2342,
+      "price": 45645,
+      "createdAt": "2025-07-07T01:38:05.725Z",
+      "updatedAt": "2025-07-07T01:41:43.915Z"
     }
   ]
 }
