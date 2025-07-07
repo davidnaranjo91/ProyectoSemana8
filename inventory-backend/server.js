@@ -6,22 +6,18 @@ const cors = require("cors")
 const app = express()
 const PORT = 3000
 
-// Middleware
 app.use(cors())
 app.use(express.json())
 
-// Rutas de archivos para almacenar datos
 const USERS_FILE = path.join(__dirname, "data", "users.json")
 const INVENTORY_FILE = path.join(__dirname, "data", "inventory.json")
 const CLIENTS_FILE = path.join(__dirname, "data", "clients.json")
 const INVOICES_FILE = path.join(__dirname, "data", "invoices.json")
 
-// Crear carpeta data si no existe
 if (!fs.existsSync(path.join(__dirname, "data"))) {
   fs.mkdirSync(path.join(__dirname, "data"))
 }
 
-// Inicializar archivos si no existen
 if (!fs.existsSync(USERS_FILE)) {
   fs.writeFileSync(USERS_FILE, JSON.stringify([]))
 }
@@ -38,7 +34,6 @@ if (!fs.existsSync(INVOICES_FILE)) {
   fs.writeFileSync(INVOICES_FILE, JSON.stringify({}))
 }
 
-// Funciones helper para leer/escribir archivos
 const readUsers = () => {
   try {
     const data = fs.readFileSync(USERS_FILE, "utf8")
@@ -91,11 +86,8 @@ const writeInvoices = (invoices) => {
   fs.writeFileSync(INVOICES_FILE, JSON.stringify(invoices, null, 2))
 }
 
-// RUTAS DE AUTENTICACIÓN
-
-// Registro de usuario
+// registro de usuario
 app.post("/api/register", (req, res) => {
-  console.log("POST /api/register - Body:", req.body)
   const { username, password } = req.body
 
   if (!username || !password) {
@@ -129,13 +121,11 @@ app.post("/api/register", (req, res) => {
   invoices[newUser.id] = []
   writeInvoices(invoices)
 
-  console.log("Usuario registrado:", newUser.username)
   res.json({ message: "Usuario registrado exitosamente", userId: newUser.id })
 })
 
-// Login de usuario
+// login usuario
 app.post("/api/login", (req, res) => {
-  console.log("POST /api/login - Body:", req.body)
   const { username, password } = req.body
 
   if (!username || !password) {
@@ -149,52 +139,37 @@ app.post("/api/login", (req, res) => {
     return res.status(401).json({ error: "Credenciales inválidas" })
   }
 
-  console.log("Login exitoso:", user.username)
   res.json({ message: "Login exitoso", userId: user.id, username: user.username })
 })
 
-// RUTAS DE INVENTARIO
 
-// Obtener inventario del usuario
 app.get("/api/inventory/:userId", (req, res) => {
-  console.log("GET /api/inventory/:userId - UserId:", req.params.userId)
   const { userId } = req.params
   const inventory = readInventory()
   const userProducts = inventory[userId] || []
-  console.log("Productos encontrados:", userProducts.length)
   res.json(userProducts)
 })
 
-// Obtener un producto específico
+// producto específico
 app.get("/api/inventory/:userId/:productId", (req, res) => {
-  console.log("🔍 GET /api/inventory/:userId/:productId - Params:", req.params)
   const { userId, productId } = req.params
   const inventory = readInventory()
 
-  console.log("📂 Inventario completo:", inventory)
-  console.log("👤 Productos del usuario:", inventory[userId])
-
   if (!inventory[userId]) {
-    console.log("❌ Inventario no encontrado para usuario:", userId)
     return res.status(404).json({ error: "Inventario no encontrado" })
   }
 
   const product = inventory[userId].find((product) => product.id === productId)
-  console.log("🔍 Buscando producto con ID:", productId)
-  console.log("📦 Producto encontrado:", product)
 
   if (!product) {
-    console.log("❌ Producto no encontrado con ID:", productId)
     return res.status(404).json({ error: "Producto no encontrado" })
   }
 
-  console.log("✅ Producto encontrado:", product.name)
   res.json(product)
 })
 
-// Agregar producto al inventario
+// agregar producto al inventario
 app.post("/api/inventory/:userId", (req, res) => {
-  console.log("POST /api/inventory/:userId - UserId:", req.params.userId, "Body:", req.body)
   const { userId } = req.params
   const { name, quantity, price } = req.body
 
@@ -219,13 +194,11 @@ app.post("/api/inventory/:userId", (req, res) => {
   inventory[userId].push(newProduct)
   writeInventory(inventory)
 
-  console.log("Producto agregado:", newProduct.name)
   res.json({ message: "Producto agregado exitosamente", product: newProduct })
 })
 
-// Actualizar producto del inventario
+// actualizar producto
 app.put("/api/inventory/:userId/:productId", (req, res) => {
-  console.log("PUT /api/inventory/:userId/:productId - Params:", req.params, "Body:", req.body)
   const { userId, productId } = req.params
   const { name, quantity, price } = req.body
   const inventory = readInventory()
@@ -254,13 +227,11 @@ app.put("/api/inventory/:userId/:productId", (req, res) => {
 
   writeInventory(inventory)
 
-  console.log("Producto actualizado:", inventory[userId][productIndex].name)
   res.json({ message: "Producto actualizado exitosamente", product: inventory[userId][productIndex] })
 })
 
-// Eliminar producto del inventario
+// Eliminar producto
 app.delete("/api/inventory/:userId/:productId", (req, res) => {
-  console.log("DELETE /api/inventory/:userId/:productId - Params:", req.params)
   const { userId, productId } = req.params
   const inventory = readInventory()
 
@@ -276,52 +247,39 @@ app.delete("/api/inventory/:userId/:productId", (req, res) => {
   inventory[userId] = inventory[userId].filter((product) => product.id !== productId)
   writeInventory(inventory)
 
-  console.log("Producto eliminado:", productToDelete.name)
   res.json({ message: "Producto eliminado exitosamente" })
 })
 
-// RUTAS DE CLIENTES
 
-// Obtener clientes del usuario
+// obtener datos clientes
 app.get("/api/clients/:userId", (req, res) => {
-  console.log("👥 GET /api/clients/:userId - UserId:", req.params.userId)
   const { userId } = req.params
   const clients = readClients()
   const userClients = clients[userId] || []
-  console.log("Clientes encontrados:", userClients.length)
   res.json(userClients)
 })
 
-// Obtener un cliente específico
+// obtener un cliente específico
 app.get("/api/clients/:userId/:clientId", (req, res) => {
-  console.log("🔍 GET /api/clients/:userId/:clientId - Params:", req.params)
   const { userId, clientId } = req.params
   const clients = readClients()
 
-  console.log("📂 Clientes completo:", clients)
-  console.log("👤 Clientes del usuario:", clients[userId])
 
   if (!clients[userId]) {
-    console.log("❌ Clientes no encontrados para usuario:", userId)
     return res.status(404).json({ error: "Clientes no encontrados" })
   }
 
   const client = clients[userId].find((client) => client.id === clientId)
-  console.log("🔍 Buscando cliente con ID:", clientId)
-  console.log("👤 Cliente encontrado:", client)
 
   if (!client) {
-    console.log("❌ Cliente no encontrado con ID:", clientId)
     return res.status(404).json({ error: "Cliente no encontrado" })
   }
 
-  console.log("✅ Cliente encontrado:", client.name)
   res.json(client)
 })
 
-// Agregar cliente
+//agregar cliente
 app.post("/api/clients/:userId", (req, res) => {
-  console.log("POST /api/clients/:userId - UserId:", req.params.userId, "Body:", req.body)
   const { userId } = req.params
   const { name, phone, email, address } = req.body
 
@@ -347,13 +305,11 @@ app.post("/api/clients/:userId", (req, res) => {
   clients[userId].push(newClient)
   writeClients(clients)
 
-  console.log("Cliente agregado:", newClient.name)
   res.json({ message: "Cliente agregado exitosamente", client: newClient })
 })
 
-// Actualizar cliente
+// actualizar cliente
 app.put("/api/clients/:userId/:clientId", (req, res) => {
-  console.log("PUT /api/clients/:userId/:clientId - Params:", req.params, "Body:", req.body)
   const { userId, clientId } = req.params
   const { name, phone, email, address } = req.body
   const clients = readClients()
@@ -383,13 +339,11 @@ app.put("/api/clients/:userId/:clientId", (req, res) => {
 
   writeClients(clients)
 
-  console.log("Cliente actualizado:", clients[userId][clientIndex].name)
   res.json({ message: "Cliente actualizado exitosamente", client: clients[userId][clientIndex] })
 })
 
-// Eliminar cliente
+// eliminar cliente
 app.delete("/api/clients/:userId/:clientId", (req, res) => {
-  console.log("DELETE /api/clients/:userId/:clientId - Params:", req.params)
   const { userId, clientId } = req.params
   const clients = readClients()
 
@@ -405,47 +359,37 @@ app.delete("/api/clients/:userId/:clientId", (req, res) => {
   clients[userId] = clients[userId].filter((client) => client.id !== clientId)
   writeClients(clients)
 
-  console.log("Cliente eliminado:", clientToDelete.name)
   res.json({ message: "Cliente eliminado exitosamente" })
 })
 
-// RUTAS DE FACTURAS
 
-// Obtener facturas del usuario
+// obtener facturas  usuario
 app.get("/api/invoices/:userId", (req, res) => {
-  console.log("🧾 GET /api/invoices/:userId - UserId:", req.params.userId)
   const { userId } = req.params
   const invoices = readInvoices()
   const userInvoices = invoices[userId] || []
-  console.log("Facturas encontradas:", userInvoices.length)
   res.json(userInvoices)
 })
 
-// Obtener una factura específica
+// obtener factura específica
 app.get("/api/invoices/:userId/:invoiceId", (req, res) => {
-  console.log("🔍 GET /api/invoices/:userId/:invoiceId - Params:", req.params)
   const { userId, invoiceId } = req.params
   const invoices = readInvoices()
 
   if (!invoices[userId]) {
-    console.log("❌ Facturas no encontradas para usuario:", userId)
     return res.status(404).json({ error: "Facturas no encontradas" })
   }
 
   const invoice = invoices[userId].find((invoice) => invoice.id === invoiceId)
 
   if (!invoice) {
-    console.log("❌ Factura no encontrada con ID:", invoiceId)
     return res.status(404).json({ error: "Factura no encontrada" })
   }
 
-  console.log("✅ Factura encontrada:", invoice.invoiceNumber)
   res.json(invoice)
 })
 
-// Crear factura y reducir inventario
 app.post("/api/invoices/:userId", (req, res) => {
-  console.log("🧾 POST /api/invoices/:userId - UserId:", req.params.userId, "Body:", req.body)
   const { userId } = req.params
   const { clientId, items } = req.body
 
@@ -453,7 +397,6 @@ app.post("/api/invoices/:userId", (req, res) => {
     return res.status(400).json({ error: "Cliente y productos son requeridos" })
   }
 
-  // Verificar que el cliente existe
   const clients = readClients()
   if (!clients[userId]) {
     return res.status(404).json({ error: "No tienes clientes registrados" })
@@ -464,13 +407,13 @@ app.post("/api/invoices/:userId", (req, res) => {
     return res.status(404).json({ error: "Cliente no encontrado" })
   }
 
-  // Verificar inventario y stock disponible
+  // verificar inventario y stock
   const inventory = readInventory()
   if (!inventory[userId]) {
     return res.status(404).json({ error: "No tienes productos en inventario" })
   }
 
-  // Validar que todos los productos existen y tienen stock suficiente
+  // validar que los productos existen y tengan stock suficiente
   for (const item of items) {
     const product = inventory[userId].find((p) => p.id === item.productId)
     if (!product) {
@@ -488,15 +431,12 @@ app.post("/api/invoices/:userId", (req, res) => {
   let total = 0
   const invoiceItems = []
 
-  // Procesar cada item y reducir inventario
   for (const item of items) {
     const productIndex = inventory[userId].findIndex((p) => p.id === item.productId)
     const product = inventory[userId][productIndex]
 
-    // Reducir cantidad del inventario
     inventory[userId][productIndex].quantity -= item.quantity
 
-    // Agregar item a la factura
     const itemTotal = item.quantity * product.price
     total += itemTotal
 
@@ -509,7 +449,7 @@ app.post("/api/invoices/:userId", (req, res) => {
     })
   }
 
-  // Guardar inventario actualizado
+  // Guardar inventario
   writeInventory(inventory)
 
   // Crear factura
@@ -525,7 +465,7 @@ app.post("/api/invoices/:userId", (req, res) => {
     },
     items: invoiceItems,
     subtotal: total,
-    total: total, // Aquí podrías agregar impuestos si es necesario
+    total: total, 
     createdAt: new Date().toISOString(),
   }
 
@@ -537,9 +477,6 @@ app.post("/api/invoices/:userId", (req, res) => {
   invoices[userId].push(newInvoice)
   writeInvoices(invoices)
 
-  console.log("✅ Factura creada:", invoiceNumber)
-  console.log("📦 Inventario actualizado para", invoiceItems.length, "productos")
-
   res.json({
     message: "Factura creada exitosamente",
     invoice: newInvoice,
@@ -547,18 +484,14 @@ app.post("/api/invoices/:userId", (req, res) => {
   })
 })
 
-// RUTAS DE REPORTES
 
 // Obtener reporte de productos vendidos
 app.get("/api/reports/sales/:userId", (req, res) => {
-  console.log("📊 GET /api/reports/sales/:userId - UserId:", req.params.userId)
   const { userId } = req.params
-  const { productName } = req.query // Parámetro opcional para filtrar por producto
+  const { productName } = req.query 
 
   const invoices = readInvoices()
   const userInvoices = invoices[userId] || []
-
-  console.log("🧾 Facturas encontradas:", userInvoices.length)
 
   // Crear reporte de ventas
   const salesReport = []
@@ -584,24 +517,19 @@ app.get("/api/reports/sales/:userId", (req, res) => {
     })
   })
 
-  // Filtrar por nombre de producto si se proporciona
   let filteredReport = salesReport
   if (productName && productName.trim() !== "") {
     const searchTerm = productName.toLowerCase().trim()
     filteredReport = salesReport.filter((record) => record.productName.toLowerCase().includes(searchTerm))
-    console.log(`🔍 Filtrado por "${productName}": ${filteredReport.length} registros`)
   }
 
-  // Ordenar por fecha más reciente
   filteredReport.sort((a, b) => new Date(b.saleDate) - new Date(a.saleDate))
 
-  console.log("📊 Reporte generado:", filteredReport.length, "registros")
   res.json(filteredReport)
 })
 
 // Obtener resumen de ventas por producto
 app.get("/api/reports/summary/:userId", (req, res) => {
-  console.log("📈 GET /api/reports/summary/:userId - UserId:", req.params.userId)
   const { userId } = req.params
 
   const invoices = readInvoices()
@@ -630,14 +558,9 @@ app.get("/api/reports/summary/:userId", (req, res) => {
     })
   })
 
-  // Convertir a array y ordenar por cantidad vendida
   const summaryArray = Object.values(productSummary).sort((a, b) => b.totalQuantitySold - a.totalQuantitySold)
-
-  console.log("📈 Resumen generado:", summaryArray.length, "productos")
   res.json(summaryArray)
 })
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
-  console.log(`📁 Archivos de datos en: ${path.join(__dirname, "data")}`)
 })

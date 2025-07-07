@@ -46,5 +46,55 @@
       "total": 1,
       "createdAt": "2025-07-07T02:09:06.695Z"
     }
+  ],
+  "1751849552224": [
+    {
+      "id": "1751856567840",
+      "invoiceNumber": "INV-1751856567839",
+      "client": {
+        "id": "1751856085176",
+        "name": "sadfsadf",
+        "phone": "4564356",
+        "email": "4564356",
+        "address": "rtyetret"
+      },
+      "items": [
+        {
+          "productId": "1751850231230",
+          "productName": "prueba",
+          "quantity": 3,
+          "unitPrice": 87987897,
+          "total": 263963691
+        }
+      ],
+      "subtotal": 263963691,
+      "total": 263963691,
+      "createdAt": "2025-07-07T02:49:27.840Z"
+    }
+  ],
+  "1751857155894": [
+    {
+      "id": "1751857249853",
+      "invoiceNumber": "INV-1751857249852",
+      "client": {
+        "id": "1751857222540",
+        "name": "david prueba",
+        "phone": "1234",
+        "email": "32532",
+        "address": "32453"
+      },
+      "items": [
+        {
+          "productId": "1751857185661",
+          "productName": "prueba",
+          "quantity": 2,
+          "unitPrice": 5,
+          "total": 10
+        }
+      ],
+      "subtotal": 10,
+      "total": 10,
+      "createdAt": "2025-07-07T03:00:49.853Z"
+    }
   ]
 }
